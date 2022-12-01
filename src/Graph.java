@@ -65,7 +65,27 @@ public class Graph {
 
     public static void main(String[] args) {
         Graph graph0 = new Graph();
-        graph0.makeGraph("");
-      
+        graph0.makeGraph("demands1.txt");
+        System.out.println(graph0);
+
+        Graph graph1 = new Graph();
+        graph1.makeGraph("demands2.txt");
+        System.out.println(graph1);
+
+        Graph graph2 = new Graph();
+        graph2.makeGraph("demands3.txt");
+        System.out.println(graph2);
+
+        Graph graph3 = new Graph();
+        graph3.makeGraph("demands4.txt");
+        System.out.println(graph3);
+
+        Graph graph4 = new Graph();
+        graph4.makeGraph("demands5.txt");
+        System.out.println(graph4);
+
+        Graph graph5 = new Graph();
+        graph5.makeGraph("demands6.txt");
+        System.out.println(graph5);
     }
 }
