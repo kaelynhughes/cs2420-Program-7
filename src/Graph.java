@@ -80,56 +80,6 @@ public class Graph {
         return sb.toString();
     }
 
-//    public int[] shortestPath(int start, int end) {
-//        // if we reached the end we're done
-//        Queue<int[]> queue = new Queue<>();
-//        if (start == end) return new int[] {};
-//        int[] startPath = {start};
-//        queue.enqueue(startPath);
-//        int whileLoop = 0;
-//        int forLoop = 0;
-//        while (!queue.isEmpty()) {
-//            boolean[] visited = new boolean[vertexCt];
-//            for (int i = 0; i < vertexCt; i++) {
-//                visited[i] = false;
-//            }
-//            int[] curr = queue.dequeue();
-//            System.out.print("dequeued ");
-//            for (int i : curr) {
-//                System.out.print(i + " ");
-//            }
-//            System.out.println();
-//            //System.out.println("for loop not started");
-//            for (int i = 0; i < vertexCt; i++) {
-//                System.out.print("FOR LOOP: i = " + i + ", vertex count = " + vertexCt + ", while: " + whileLoop + ", for: " + forLoop + ", ");
-//                // if there's an edge
-//                if (residual[start][i] != 0 &! visited[i]) {
-//                    System.out.print("yes, ");
-//                    // add the partial path to the queue
-//                    int[] next = new int[curr.length + 1];
-//                    for (int j = 0; j < curr.length; j++) {
-//                        next[j] = curr[j];
-//                    }
-//                    visited[i] = true;
-//                    next[next.length - 1] = i;
-//                    System.out.println("added " + i);
-//                    if (i == end) {
-//                        return next;
-//                    }
-//                    for (int j : next) {
-//                        //System.out.print(j + " ");
-//                    }
-//                    //System.out.println();
-//                    queue.enqueue(next);
-//                }
-//                System.out.println();
-//                forLoop++;
-//            }
-//            whileLoop++;
-//        }
-//        return new int[] {};
-//    }
-
     public void maxFlow() {
         this.maxFlow(0, vertexCt);
     }
@@ -143,20 +93,48 @@ public class Graph {
             System.out.println("Found flow " + pathFlow + ": " + printPath(currentPath));
             currentPath = shortestPath();
         }
+        System.out.println();
         return totalFlow;
     }
 
-//    public void printPaths(int start, int end, String previous) {
-//        if (start == end) {
-//            System.out.println(previous + ", " + start);
-//        }
-//        // for each node that start is connected to, run printAllPaths till we find the end
-//        for (int i = 0; i < vertexCt; i++) {
-//            if (capacity[start][i] != 0) {
-//                printPaths(i, end, previous + ", " + start);
-//            }
-//        }
-//    }
+    public void printEdges() {
+        for (int i = 0; i < vertexCt; i++) {
+            for (int j = 0; j < i; j++) {
+                if (residual[i][j] != 0) {
+                    System.out.println("Edge (" + j + ", " + i + ") transports " + residual[i][j] + " cases");
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    public void minCut() {
+        System.out.println("MIN CUT:");
+        // bfs, add all nodes reached to r
+        // find edges that start at an r node and end at a not-r node
+        // print each of those
+
+        boolean[] r = new boolean[vertexCt];
+        // queue will hold all edges that can be reached from the source
+        Queue<Integer> queue = new Queue<>();
+        queue.enqueue(0);
+        while (!queue.isEmpty()) {
+            int current = queue.dequeue();
+            r[current] = true;
+            // go through edges from current
+            for (int i = 0; i < vertexCt; i++) {
+                // there is an edge in both capacity and residual - can be reached from source
+                if (capacity[current][i] != 0 && residual[current][i] != 0 && !r[i]) {
+                    queue.enqueue(i);
+                    r[i] = true;
+                }
+                else if (capacity[current][i] != 0 && !r[i]) {
+                    System.out.println("Edge (" + current + ", " + i + ") transports " + residual[i][current] + " cases");
+                }
+            }
+        }
+        System.out.println();
+    }
 
     public int getVertexCt() {
         return vertexCt;
@@ -227,10 +205,10 @@ public class Graph {
     public static void main(String[] args) {
         Graph graph0 = new Graph();
         graph0.makeGraph("demands1.txt");
-        int[] path1 = { 0, 2, 4, 5 };
-        int[] path2 = { 0, 1, 3, 5 };
-        int[] path3 = { 0, 1, 2, 3, 4, 5 };
-        System.out.println(graph0);
+//        int[] path1 = { 0, 2, 4, 5 };
+//        int[] path2 = { 0, 1, 3, 5 };
+//        int[] path3 = { 0, 1, 2, 3, 4, 5 };
+//        System.out.println(graph0);
 //        System.out.println("Path flow for path1: " + graph0.pathFlow(path1));
 //        System.out.println("Path flow for path2: " + graph0.pathFlow(path2));
 //        System.out.println("Path flow for path3: " + graph0.pathFlow(path3));
@@ -238,28 +216,51 @@ public class Graph {
 //        graph0.addFlow(path2);
 //        System.out.println("Path flow for path3 after adding flow: " + graph0.pathFlow(path3));
         graph0.maxFlow();
+        graph0.printEdges();
+        graph0.minCut();
         System.out.println(graph0.toStringResidual());
 
-//        Graph graph1 = new Graph();
-//        graph1.makeGraph("demands2.txt");
-//        System.out.println(graph1);
-//        graph1.maxFlow();
-//
-//        Graph graph2 = new Graph();
-//        graph2.makeGraph("demands3.txt");
-//        System.out.println(graph2);
-//
-//        Graph graph3 = new Graph();
-//        graph3.makeGraph("demands4.txt");
-//        System.out.println(graph3);
-//
-//        Graph graph4 = new Graph();
-//        graph4.makeGraph("demands5.txt");
-//        System.out.println(graph4);
-//
-//        Graph graph5 = new Graph();
-//        graph5.makeGraph("demands6.txt");
-//        System.out.println(graph5);
+        Graph graph1 = new Graph();
+        graph1.makeGraph("demands2.txt");
+        System.out.println(graph1);
+        graph1.maxFlow();
+        graph1.printEdges();
+        graph1.minCut();
+
+        Graph graph2 = new Graph();
+        graph2.makeGraph("demands3.txt");
+        System.out.println(graph2);
+        graph2.maxFlow();
+        graph2.printEdges();
+        graph2.minCut();
+
+        Graph graph3 = new Graph();
+        graph3.makeGraph("demands4.txt");
+        System.out.println(graph3);
+        graph3.maxFlow();
+        graph3.printEdges();
+        graph3.minCut();
+
+        Graph graph4 = new Graph();
+        graph4.makeGraph("demands5.txt");
+        System.out.println(graph4);
+        graph4.maxFlow();
+        graph4.printEdges();
+        graph4.minCut();
+
+        Graph graph5 = new Graph();
+        graph5.makeGraph("demands6.txt");
+        System.out.println(graph5);
+        graph5.maxFlow();
+        graph5.printEdges();
+        graph5.minCut();
+
+        System.out.println();
+        Graph graph6 = new Graph();
+        graph6.makeGraph("demands7.txt");
+        graph6.maxFlow();
+        graph6.printEdges();
+        graph6.minCut();
     }
     private class Path {
         private int flow;
