@@ -63,4 +63,18 @@ public class Queue<E> {
             this.value = value;
         }
     }
+
+    public static void main(String[] args) {
+        Queue queue = new Queue<Integer>();
+        queue.enqueue(0);
+        queue.enqueue(1);
+        queue.enqueue(2);
+
+        queue.print(3);
+        System.out.println();
+
+        queue.dequeue();
+
+        queue.print(2);
+    }
 }
